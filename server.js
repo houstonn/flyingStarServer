@@ -13,23 +13,8 @@ var app = express();
 var year = 2000;
 var month = 1;
 var day = 1;
-
-var env = process.env.NODE_ENV || 'development';
-if ('development' == env) {
-   // configure stuff here
-    //app.use(express.bodyParser());
-    //app.use(app.router);
-}
-
-app.all('*', function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header('Access-Control-Allow-Methods', 'OPTIONS,GET,POST,PUT,DELETE');
-    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
-    if ('OPTIONS' == req.method){
-        return res.send(200);
-    }
-    next();
-});
+var ipaddress = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
+var port      = process.env.OPENSHIFT_NODEJS_PORT || 8080;
 
 var selectStatment = "SELECT * FROM data WHERE year = "
 
@@ -85,6 +70,6 @@ app.get('/data/:year/:month/:day', function(req, res){
 });
 
 
-app.listen(3000);
-
-console.log("Submit GET or POST to http://localhost:3000/data");
+server.listen( port, ipaddress, function() {
+    console.log((new Date()) + ' Server is listening on port 8080');
+});
